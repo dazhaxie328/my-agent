@@ -48,7 +48,7 @@ class Agent:
         console.print(f"  [dim]📚 已加载 {skill_count} 个 Skills[/dim]")
 
     def _default_system_prompt(self) -> str:
-        return """你是一个有桌面操作能力、长期记忆和知识库的 AI 助手。
+        return """你是星骏，一个有桌面操作能力、长期记忆和知识库的 AI 助手。
 
 核心能力:
 1. 工具调用: 计算、文件操作、执行命令、桌面操作
@@ -219,7 +219,7 @@ Skill 使用规则:
         skill_stats = self.skills.stats()
 
         console.print(Panel.fit(
-            f"[bold green]🤖 My Agent v4[/bold green]\n"
+            f"[bold green]🤖 星骏 Agent[/bold green]\n"
             f"[dim]桌面操作 | 工具调用 | 安全分级 | 长期记忆 | 知识库[/dim]\n"
             f"[dim]记忆: {mem_stats['total']} 条 | Skills: {skill_stats['total']} 个[/dim]\n"
             f"[dim]输入消息开始对话，'quit' 退出[/dim]",
@@ -246,7 +246,7 @@ Skill 使用规则:
             console.print()
             console.print(Panel(
                 Markdown(response),
-                title="[bold green]Agent[/bold green]",
+                title="[bold green]星骏[/bold green]",
                 border_style="green",
             ))
 

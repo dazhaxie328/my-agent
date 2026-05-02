@@ -19,7 +19,7 @@ load_dotenv()
 
 
 def main():
-    parser = argparse.ArgumentParser(description="My Agent v4 — 完整版 AI Agent")
+    parser = argparse.ArgumentParser(description="星骏 Agent — 完整版 AI Agent")
     parser.add_argument("-q", "--query", help="单次问答模式")
     parser.add_argument("--model", default=None, help="模型名称")
     parser.add_argument("--base-url", default=None, help="API Base URL")

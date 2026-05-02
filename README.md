@@ -1,6 +1,6 @@
-# My Agent
+# 星骏 (Xīngjùn)
 
-从零造的 AI Agent 框架 — 学习 Agent 底层原理的实战项目。
+星骏 — 从零造的 AI Agent 框架 — 学习 Agent 底层原理的实战项目。
 
 ## 特性
 
