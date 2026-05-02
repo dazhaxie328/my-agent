@@ -34,7 +34,7 @@ class Agent:
         self.llm = llm
         self.system_prompt = system_prompt or self._default_system_prompt()
         self.messages: list[dict] = []
-        self.max_iterations = 10
+        self.max_iterations = 999
 
         # 核心组件
         self.pipeline = Pipeline(vision_enabled=vision_enabled)
@@ -168,7 +168,7 @@ Skill 使用规则:
         while iteration < self.max_iterations:
             iteration += 1
 
-            console.print(f"  [dim]💭 思考中... (第{iteration}轮)[/dim]")
+            console.print("  [dim]💭 思考中...[/dim]")
             response = self.llm.chat(
                 messages=self.messages,
                 tools=registry.to_schemas() if registry.list_tools() else None,
