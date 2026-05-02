@@ -2,6 +2,39 @@
 
 星骏 — 从零造的 AI Agent 框架 — 学习 Agent 底层原理的实战项目。
 
+## 一键部署
+
+```bash
+# 方式1: 直接运行
+curl -fsSL https://raw.githubusercontent.com/dazhaxie328/my-agent/main/deploy.sh | bash
+
+# 方式2: 下载后运行
+wget https://raw.githubusercontent.com/dazhaxie328/my-agent/main/deploy.sh
+chmod +x deploy.sh
+./deploy.sh
+```
+
+## 快速启动
+
+```bash
+cd ~/my-agent
+
+# 交互模式
+./start.sh
+
+# 启用桌面操作
+./start.sh --desktop
+
+# 后台运行 (tmux)
+./start.sh --desktop --background
+
+# 单次问答
+./start.sh -q "你的问题"
+
+# 查看帮助
+./start.sh --help
+```
+
 ## 特性
 
 - 🧠 **LLM 对话** — 支持任意 OpenAI 兼容模型
