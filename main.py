@@ -94,9 +94,17 @@ def main():
     import tools.memory_tools
     import tools.skill_tools
 
-    if args.desktop:
+    # 检测 Termux 环境
+    _is_termux = bool(os.environ.get("TERMUX_VERSION")) or os.path.exists("/data/data/com.termux")
+
+    if args.desktop and _is_termux:
+        print("⚠️  Termux 环境不支持桌面操作，已自动跳过 --desktop")
+    elif args.desktop:
         import tools.desktop_tools
         print("🖥️  桌面操作已启用")
+    else:
+        # 非桌面模式也要导入 (注册空壳工具或完整工具)
+        import tools.desktop_tools
 
     # 初始化 Agent
     from agent.core import Agent

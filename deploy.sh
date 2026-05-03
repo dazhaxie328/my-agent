@@ -165,7 +165,7 @@ info "安装 Python 依赖..."
 
 # Termux 需要特殊处理
 if [ "$IS_TERMUX" = "1" ]; then
-    # Termux 上某些包可能需要特殊处理
+    # Termux 上不安装桌面依赖 (pyautogui/pytesseract 需要图形环境)
     export CFLAGS="-Wno-error"
     uv sync 2>&1 | tail -5 || {
         warn "部分依赖可能安装失败，尝试跳过可选依赖..."
@@ -173,6 +173,10 @@ if [ "$IS_TERMUX" = "1" ]; then
     }
 else
     uv sync 2>&1 | tail -3
+    # 桌面环境额外安装桌面依赖 (可选)
+    if [ -n "$DISPLAY" ] || [ -n "$WAYLAND_DISPLAY" ]; then
+        uv sync --extra desktop 2>&1 | tail -3 || true
+    fi
 fi
 
 ok "依赖安装完成"
