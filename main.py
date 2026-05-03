@@ -18,6 +18,77 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
+def _setup_api_interactive() -> tuple:
+    """首次启动交互式 API 配置向导"""
+    import sys
+
+    print()
+    print("  ╔═══════════════════════════════════════╗")
+    print("  ║       🌟 星骏 Agent API 配置          ║")
+    print("  ╚═══════════════════════════════════════╝")
+    print()
+    print("  首次启动，请选择 API 提供商:")
+    print()
+    print("  1. OpenAI      (https://api.openai.com/v1)")
+    print("  2. DeepSeek    (https://api.deepseek.com/v1)")
+    print("  3. 小米 MiMo   (https://token-plan-cn.xiaomimimo.com/v1)")
+    print("  4. 自定义")
+    print()
+
+    try:
+        choice = input("  选择 [1-4]: ").strip()
+    except (EOFError, KeyboardInterrupt):
+        print("\n已取消")
+        return ("", "", "")
+
+    providers = {
+        "1": ("https://api.openai.com/v1", "gpt-4o-mini"),
+        "2": ("https://api.deepseek.com/v1", "deepseek-chat"),
+        "3": ("https://token-plan-cn.xiaomimimo.com/v1", "mimo-v2.5-pro"),
+    }
+
+    if choice in providers:
+        base_url, model = providers[choice]
+    elif choice == "4":
+        try:
+            base_url = input("  Base URL: ").strip()
+            model = input("  Model 名称: ").strip()
+        except (EOFError, KeyboardInterrupt):
+            print("\n已取消")
+            return ("", "", "")
+    else:
+        print("  ❌ 无效选择")
+        return ("", "", "")
+
+    try:
+        api_key = input("  API Key: ").strip()
+    except (EOFError, KeyboardInterrupt):
+        print("\n已取消")
+        return ("", "", "")
+
+    if not api_key:
+        print("  ❌ API Key 不能为空")
+        return ("", "", "")
+
+    # 保存到 .env
+    env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
+    try:
+        with open(env_path, "w") as f:
+            f.write(f"OPENAI_API_KEY={api_key}\n")
+            f.write(f"OPENAI_BASE_URL={base_url}\n")
+            f.write(f"MODEL_NAME={model}\n")
+        print(f"\n  ✅ 配置已保存到 {env_path}")
+    except Exception as e:
+        print(f"\n  ⚠️  保存失败: {e}")
+        print("  请手动创建 .env 文件")
+
+    print(f"  📡 Provider: {base_url}")
+    print(f"  🤖 Model: {model}")
+    print()
+
+    return (api_key, base_url, model)
+
+
 def main():
     parser = argparse.ArgumentParser(description="星骏 Agent — 完整版 AI Agent")
     parser.add_argument("-q", "--query", help="单次问答模式")
@@ -31,19 +102,24 @@ def main():
     parser.add_argument("--memory-stats", action="store_true", help="查看记忆统计")
     parser.add_argument("--skill-stats", action="store_true", help="查看 Skill 统计")
     parser.add_argument("--skill-search", help="搜索 Skills")
+    parser.add_argument("--setup", action="store_true", help="重新配置 API")
     args = parser.parse_args()
+
+    # --setup: 重新配置 API
+    if args.setup:
+        _setup_api_interactive()
+        return
 
     # 读取配置
     api_key = args.api_key or os.getenv("OPENAI_API_KEY", "")
     base_url = args.base_url or os.getenv("OPENAI_BASE_URL")
     model = args.model or os.getenv("MODEL_NAME", "gpt-4o-mini")
 
+    # 没有 API Key 时，启动交互式配置
     if not api_key:
-        print("❌ 请设置 API Key:")
-        print("   方式1: export OPENAI_API_KEY=sk-xxx")
-        print("   方式2: 创建 .env 文件写入 OPENAI_API_KEY=sk-xxx")
-        print("   方式3: --api-key sk-xxx")
-        return
+        api_key, base_url, model = _setup_api_interactive()
+        if not api_key:
+            return
 
     # 初始化 LLM Client
     from agent.llm_client import LLMClient
